@@ -1,0 +1,4 @@
+BOOTERS_POSTGRES_DB_USERNAME
+BOOTERS_POSTGRES_DB_PASSWORD
+
+create a booters-api user in postgres
