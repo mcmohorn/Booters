@@ -17,8 +17,9 @@ class UsersController {
     get(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log('we got here');
                 const client = yield config_1.default.connect();
-                const sql = "SELECT * FROM todos";
+                const sql = "select * from pg_catalog.pg_user";
                 const { rows } = yield client.query(sql);
                 const todos = rows;
                 client.release();

@@ -2,16 +2,24 @@ import React, { useEffect, useState } from "react"
 import { Map, Marker, Overlay } from "pigeon-maps"
 import useWindowDimensions from "../hooks/window";
 
-import { css } from '@emotion/react'
-const parkCity = [40.633094, -111.515027];
-const jackson = [40.633094, -111.515027];
-import { NearMe, Lens, Mail, Menu } from '@mui/icons-material';
+import { css } from '@emotion/react';
+import SkiAreaLogo from '../static/ski-resort.svg';
+import areas from '../static/areas.json';
+import { NearMe, Lens, Mail, Menu, RadioButtonChecked, Terrain } from '@mui/icons-material';
 import { Button, IconButton, Drawer, Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from "@mui/material";
+import AreasPopup from "./AreasPopup";
+import { GoogleLogin } from '@react-oauth/google';
+import { useTheme } from '@mui/material/styles';
+
+import { UserAPI } from "../apis/userApi";
 
 export function MyMap() {
-    const [center, setCenter] = useState(parkCity);
+    const [center, setCenter] = useState(areas[0].location);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+    const [positionHover, setPositionHover] = useState(false);
+    const [menuHover, setMenuHover] = useState(false);
+    const [isAreasDialogOpen, setIsAreasDialogOpen] = useState(false);
+    const theme = useTheme();
   const [zoom, setZoom] = useState(11)
     const [geoActive, setGeoActive] = useState(false);
     const [myLocation, setMyLocation] = useState(null);
@@ -51,44 +59,88 @@ export function MyMap() {
     }, []);
 
     
+    const positionButtonStyle =  { 
+      position: 'absolute', 
+      right: '1rem', 
+      bottom: '1.5rem', 
+      color: 'white',
+      borderRadius: '4px',
+      backgroundColor: positionHover ? theme.palette.primary.dark : theme.palette.primary.main,
+      width: '56px',
+      height: '56px'
+    };
 
     const myPositionButton = (
-      <Button 
-        style={{ position: 'absolute', right: '1rem', bottom: '1.5rem' }}
-        variant="contained" 
-        onClick={() => {
-          setCenterMe(true);
-          getPosition();
-        }}>
-          <IconButton style={{color: 'white'}}><NearMe/></IconButton>
-    </Button>
+          <IconButton 
+            variant="contained" 
+            onMouseEnter={() => setPositionHover(true)}
+            onMouseLeave={() => setPositionHover(false)}
+            onClick={() => {
+              setCenterMe(true);
+              getPosition();
+            }}
+            style={positionButtonStyle}>
+              <NearMe/>
+          </IconButton>
     );
 
-    
+    const menuButtonStyle = {
+      position: 'absolute',
+      left: '1rem',
+      top: '1.5rem',
+      borderRadius: '4px',
+      color: 'white',
+      width: '56px',
+      height: '56px',
+      backgroundColor: menuHover ? theme.palette.primary.dark : theme.palette.primary.main,
+    };
 
     const menuButton = (
-      <Button
-          onClick={() => {
-            setIsMenuOpen(true) 
-          }}
-          color="primary"
-          style={{ 
-        position: 'absolute', left: '1rem', top: '1.5rem' }}
-          
-          variant="contained">
-            
-            
-            <IconButton style={{color: 'white'}}><Menu /></IconButton>
-          </Button>
+      <IconButton 
+        color="primary"
+        variant="contained"
+        style={menuButtonStyle}
+        onMouseEnter={() => setMenuHover(true)}
+            onMouseLeave={() => setMenuHover(false)}
+        onClick={() => {
+          setIsMenuOpen(true) 
+        }}
+      >
+        <Menu />
+      </IconButton>
     );
 
     const myLocationOverlay = (
       <Overlay anchor={myLocation} offset={[0,0]}>
-        <Lens color="primary" />
+        <RadioButtonChecked color="primary" />
       </Overlay>
     );
 
+    const clickedAreas = (e) => {
+      console.log('here we are', e);
+      e.preventDefault();
+      setIsAreasDialogOpen(true);
+    }
     
+
+    const notSignedInList = (
+      <List>
+        <ListItem key={"newjump"} disablePadding>
+
+          <GoogleLogin
+        onSuccess={credentialResponse => {
+          // UserAPI.get();
+          console.log('google login...',credentialResponse); // TODO REMOVE ME
+        }}
+        onError={() => {
+          alert('Login Failed');
+        }}
+        useOneTap
+      />
+
+        </ListItem>
+      </List>
+    );
 
     const list = (
       <Box
@@ -97,28 +149,25 @@ export function MyMap() {
       >
         <List>
             <ListItem key={"newjump"} disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={clickedAreas}>
                 <ListItemIcon>
-                   <Mail />
+                  <Terrain />
                 </ListItemIcon>
-                <ListItemText primary={"Create Jump"} />
+                <ListItemText primary={"Areas"} />
               </ListItemButton>
             </ListItem>
         </List>
         <Divider />
-        <List>
-            <ListItem key={"newjump"} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                   <Mail />
-                </ListItemIcon>
-                <ListItemText primary={"Create Jump"} />
-              </ListItemButton>
-            </ListItem>
-        </List>
+        {notSignedInList}
+
+        
         
       </Box>
     );
+
+    
+
+    
 
     const menu = (
       <Drawer
@@ -129,18 +178,36 @@ export function MyMap() {
         {list}
       </Drawer>
     );
+
+      const areaModalClosed = (newLoc) => {
+        setIsAreasDialogOpen(false);
+        
+        if (newLoc) {
+          setCenter(newLoc);
+        }
+      };
+
+    const areasPopup = (
+      <AreasPopup open={isAreasDialogOpen} onClose={areaModalClosed}/>
+    )
     
   return (
-    <Map height={height} center= {center} defaultCenter={center} defaultZoom={14} onBoundsChanged={({ center, zoom }) => { 
-      setCenter(center) 
-      setZoom(zoom) 
-    }} >
+    <>
+      <Map height={height} center= {center} defaultCenter={center} defaultZoom={14} onBoundsChanged={({ center, zoom }) => { 
+        setCenter(center) 
+        setZoom(zoom) 
+      }} >
+        
+        <Marker  width={50} anchor={[50.879, 4.6997]} />
+        {myLocation ? myLocationOverlay : null}
+      </Map>
       
-      <Marker width={50} anchor={[50.879, 4.6997]} />
-      {myLocation ? myLocationOverlay : null}
-      {geoActive ? myPositionButton : null}
-      {menu}
-      {menuButton}
-    </Map>
+        {geoActive ? myPositionButton : null}
+        {menu}
+        {menuButton}
+        {areasPopup}
+
+    </>
+    
   )
 }

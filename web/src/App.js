@@ -2,7 +2,6 @@ import logo from './logo.svg';
 import './App.css';
 import { MyMap } from './components/MyMap';
 
-import { GoogleLogin } from '@react-oauth/google';
 function App() {
   return (
     <div className="App">
@@ -11,15 +10,7 @@ function App() {
         <MyMap/>
         
 
-      <GoogleLogin
-        onSuccess={credentialResponse => {
-          console.log('received', credentialResponse);
-        }}
-        onError={() => {
-          alert('Login Failed');
-        }}
-        useOneTap
-      />;
+      
       </header>
     </div>
   );

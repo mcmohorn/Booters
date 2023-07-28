@@ -1,0 +1,10 @@
+[
+    {
+        "name": "Park City",
+        "location" : [40.633094, -111.515027]
+    },
+    {
+        "name": "Jackson Hole",
+        "location" : [43.595607, -110.846756]
+    }
+]

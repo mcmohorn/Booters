@@ -1,8 +1,8 @@
 import express, { Router } from 'express';
-import UsersController from '../controllers/UsersController';
+import JumpsController from '../controllers/JumpsController';
 
 const router = Router();
-const controller = new UsersController();
+const controller = new JumpsController();
 
 router.get('/', controller.get);
 

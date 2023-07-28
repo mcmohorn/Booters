@@ -12,7 +12,7 @@
             "type": "node",
             "request": "launch",
             "preLaunchTask": "build-api",
-            "program": "${workspaceFolder}/api"
+            "program": "${workspaceFolder}/api" 
         },
         
 

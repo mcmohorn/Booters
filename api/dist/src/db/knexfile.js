@@ -4,9 +4,18 @@ require("ts-node/register");
 // Update with your config settings.
 const config = {
     development: {
-        client: "sqlite3",
+        client: "postgresql",
         connection: {
-            filename: "./dev.sqlite3"
+            database: "booters",
+            user: process.env.BOOTERS_DB_POSTGRES_USERNAME,
+            password: process.env.BOOTERS_DB_POSTGRES_PASSWORD,
+        },
+        pool: {
+            min: 2,
+            max: 10
+        },
+        migrations: {
+            tableName: "knex_migrations"
         }
     },
     staging: {

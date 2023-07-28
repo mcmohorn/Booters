@@ -1,13 +1,13 @@
 import pool from '../db/config';
 
-class UsersController {
+class JumpsController {
 
     public async get(req, res) {
         try {
-            console.log('we got here');
+            console.log('we got here (jumps controller)');
             const client = await pool.connect();
 
-            const sql = "select * from pg_catalog.pg_user";
+            const sql = "select * from jump";
             const { rows } = await client.query(sql);
             const todos = rows;
 
@@ -20,4 +20,4 @@ class UsersController {
     }
 }
 
-export default UsersController;
+export default JumpsController;
