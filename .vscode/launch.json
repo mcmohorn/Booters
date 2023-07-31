@@ -7,12 +7,16 @@
 
 
 
+
         {
             "name": "debug server (local)",
             "type": "node",
             "request": "launch",
             "preLaunchTask": "build-api",
-            "program": "${workspaceFolder}/api" 
+            "program": "${workspaceFolder}/api",
+            "env": {
+                "NODE_ENV": "development"
+            }
         },
         
 

@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import store from './store'
+import { Provider } from 'react-redux'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -13,9 +15,11 @@ import '@fontsource/roboto/700.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    
-    
-    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID}><App /></GoogleOAuthProvider>;
+    <Provider store={store}>
+      <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID}>
+        <App />
+      </GoogleOAuthProvider>;
+    </Provider>
   </React.StrictMode>
 );
 

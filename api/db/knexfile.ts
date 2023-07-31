@@ -1,4 +1,5 @@
 import type { Knex } from "knex";
+import { knexSnakeCaseMappers } from "objection";
 import 'ts-node/register';
 // Update with your config settings.
 
@@ -10,6 +11,7 @@ const config: { [key: string]: Knex.Config } = {
       user: process.env.BOOTERS_DB_POSTGRES_USERNAME,
       password: process.env.BOOTERS_DB_POSTGRES_PASSWORD,
     },
+    ...knexSnakeCaseMappers(),
     pool: {
       min: 2,
       max: 10
@@ -54,4 +56,4 @@ const config: { [key: string]: Knex.Config } = {
 
 };
 
-module.exports = config;
+export default config;

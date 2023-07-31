@@ -1,23 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const objection_1 = require("objection");
 require("ts-node/register");
 // Update with your config settings.
 const config = {
-    development: {
-        client: "postgresql",
-        connection: {
+    development: Object.assign(Object.assign({ client: "postgresql", connection: {
             database: "booters",
             user: process.env.BOOTERS_DB_POSTGRES_USERNAME,
             password: process.env.BOOTERS_DB_POSTGRES_PASSWORD,
-        },
-        pool: {
+        } }, (0, objection_1.knexSnakeCaseMappers)()), { pool: {
             min: 2,
             max: 10
-        },
-        migrations: {
+        }, migrations: {
             tableName: "knex_migrations"
-        }
-    },
+        } }),
     staging: {
         client: "postgresql",
         connection: {
@@ -50,5 +46,5 @@ const config = {
         }
     }
 };
-module.exports = config;
+exports.default = config;
 //# sourceMappingURL=knexfile.js.map

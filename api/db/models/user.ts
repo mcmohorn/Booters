@@ -1,38 +1,25 @@
 import { Model } from 'objection';
+import Provider from './provider';
 
-class User extends Model {
-
+export default class User extends Model {
+  public id: string;
+  public providerId: string;
+  public providerRef: string;
   static get tableName() {
-    return 'user';
-  }
-
-  static get jsonSchema() {
-    return {
-      type: 'object',
-      required: ['id', 'name', 'email'],
-
-      properties: {
-        id: { type: 'string', minLength: 36, maxLength: 36  },
-        name: { type: 'string', minLength: 1, maxLength: 255 },
-        email: { type: 'string', minLength: 1, maxLength: 255 },
-      }
-    };
+    return 'usr'; 
   }
 
   static get relationMappings() {
-    const Jump =  require("./jump");
 
     return {
-        createdJumps: {
-            relation: Model.HasManyRelation,
-            modelClass: Jump,
-            join: {
-              from: 'user.id',
-              to: 'jump.created_by_id'
-            }
-          },
-
-      
+      provider: {
+        relation: Model.HasOneRelation,
+        modelClass: Provider,
+        join: {
+          from: 'usr.provider_id',
+          to: 'provider.id'
+        }
+      }
     };
   }
 }

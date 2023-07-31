@@ -1,19 +1,13 @@
-import pool from '../db/config';
-
+import Jumps from "../services/Jumps";
 class JumpsController {
 
     public async get(req, res) {
         try {
-            console.log('we got here (jumps controller)');
-            const client = await pool.connect();
-
-            const sql = "select * from jump";
-            const { rows } = await client.query(sql);
-            const todos = rows;
-
-            client.release();
-
-            res.send(todos);
+            // TODO attach query parameters
+            const js = await Jumps.list();
+            console.log('js is ', js);
+            
+            res.send(js);
         } catch (error) {
             res.status(400).send(error);
         }

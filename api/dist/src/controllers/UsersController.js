@@ -8,22 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const config_1 = __importDefault(require("../db/config"));
 class UsersController {
     get(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log('we got here');
-                const client = yield config_1.default.connect();
-                const sql = "select * from pg_catalog.pg_user";
-                const { rows } = yield client.query(sql);
-                const todos = rows;
-                client.release();
-                res.send(todos);
+                res.send(req.user);
             }
             catch (error) {
                 res.status(400).send(error);

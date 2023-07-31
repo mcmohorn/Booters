@@ -1,6 +1,6 @@
 import { Knex } from "knex";
 import constants from '../constants.json';
-const userTableName = 'user';
+const userTableName = 'usr';
 
 const authProviderTableName = 'provider';
 
@@ -24,6 +24,7 @@ export async function up(knex: Knex): Promise<void> {
         table.string('first_name', 100)
         table.string('last_name', 100)
         table.string('email', 100).notNullable();
+        table.string('photo', 300);
         table.uuid('provider_id').references('id').inTable(authProviderTableName);
         table.string('provider_ref', 100).notNullable(); // the unique id (e.g. 'sub' for Google)
     

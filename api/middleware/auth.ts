@@ -1,17 +1,34 @@
 import { OAuth2Client } from 'google-auth-library';
+import Users, { UserResource } from '../services/Users';
+import constants from '../db/constants.json';
 
 const auth = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = await getDecodedOAuthJwtGoogle(token);
+    const decodedToken = await getDecodedOAuthJwtGoogle(token) as any;
     console.log('DECODED', decodedToken);
-    next();
-    // if (req.body.userId && req.body.userId !== userId) {
-    //   throw 'Invalid user ID';
-    // } else {
-      
-    // }
-  } catch {
+    if (!decodedToken.payload) {
+      throw "Bad Token";
+    } else {
+
+      const u: UserResource = {
+        name: decodedToken.payload.name,
+        firstName: decodedToken.payload.given_name,
+        lastName: decodedToken.payload.family_name,
+        email: decodedToken.payload.email,
+        providerId: constants.provider.google,
+        providerRef: decodedToken.payload.sub,
+        photo: decodedToken.payload.picture,
+      };
+
+      const thisUser = await Users.findOrCreate(u);
+      req.user = thisUser;
+      next();
+    }
+    
+    
+  } catch(e) {
+    console.log('e is ', e);
     res.status(401).json({
       error: new Error('Invalid request!')
     });

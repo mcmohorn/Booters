@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { Map, Marker, Overlay } from "pigeon-maps"
 import useWindowDimensions from "../hooks/window";
-
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser } from '../redux/userSlice';
 import { css } from '@emotion/react';
 import SkiAreaLogo from '../static/ski-resort.svg';
 import areas from '../static/areas.json';
@@ -12,8 +13,11 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useTheme } from '@mui/material/styles';
 
 import { UserAPI } from "../apis/userApi";
+import { JumpApi } from "../apis/jumpApi";
 
 export function MyMap() {
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.value);
     const [center, setCenter] = useState(areas[0].location);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [positionHover, setPositionHover] = useState(false);
@@ -29,6 +33,7 @@ export function MyMap() {
         setGeoActive(true);
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
+
         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
         setMyLocation([latitude, longitude]);
     }
@@ -45,6 +50,11 @@ export function MyMap() {
       }
     }, [myLocation]);
 
+    const getJumps = () => {
+      JumpApi.list();
+      console.log('user is ', user);
+    };
+
     const getPosition = () => {
       if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
@@ -56,6 +66,8 @@ export function MyMap() {
     // get user's location and show that by default
     useEffect(() => {
         getPosition();
+        getJumps();
+
     }, []);
 
     
@@ -121,6 +133,13 @@ export function MyMap() {
       e.preventDefault();
       setIsAreasDialogOpen(true);
     }
+
+    const getLoggedInUser = async () => {
+      const u = await UserAPI.get();
+      console.log('got user from api ', u);
+      dispatch(setUser(u));
+
+    };
     
 
     const notSignedInList = (
@@ -129,8 +148,9 @@ export function MyMap() {
 
           <GoogleLogin
         onSuccess={credentialResponse => {
-          // UserAPI.get();
-          console.log('google login...',credentialResponse); // TODO REMOVE ME
+          localStorage.setItem('token', credentialResponse.credential);
+          getLoggedInUser();
+          
         }}
         onError={() => {
           alert('Login Failed');

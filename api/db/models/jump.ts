@@ -1,6 +1,6 @@
 import { Model } from 'objection';
 
-class Jump extends Model {
+export default class Jump extends Model {
 
   static get tableName() {
     return 'jump';
