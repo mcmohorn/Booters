@@ -8,17 +8,22 @@ export type UserResource = {
     firstName?: string;
     lastName?: string;
     email: number;
+    provider?: string;
     providerId?: string;
     providerRef?: string;
     photo?: string;
   };
 
 export default class Users {
+    public static eagerFields: any = {
+        provider: true
+    };
     public static async findOrCreate(userResource:UserResource): Promise<UserResource> {
 
         const userResult = await User.transaction(async trx => {
 
             let user = await User.query(trx)
+            .withGraphJoined(Users.eagerFields)
             .findOne({
                 providerId: userResource.providerId,
                 providerRef: userResource.providerRef
@@ -26,8 +31,7 @@ export default class Users {
 
             if (!user) {
                 userResource.id = randomUUID();
-                user = await User.query(trx).insert(userResource);
-                
+                user = await User.query(trx).insert(userResource).withGraphJoined(Users.eagerFields);
             }
 
             return this.toResouce(user);
@@ -46,6 +50,9 @@ export default class Users {
             email: graph.email,
         };
 
+        if (graph.provider) {
+            u.provider = graph.provider.name;
+        }
         
         return u;
     }

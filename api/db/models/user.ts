@@ -16,7 +16,7 @@ export default class User extends Model {
         relation: Model.HasOneRelation,
         modelClass: Provider,
         join: {
-          from: 'usr.provider_id',
+          from: 'usr.providerId',
           to: 'provider.id'
         }
       }
