@@ -4,7 +4,8 @@
         "knuckle": "156d14f0-4187-46c2-9f47-c0c992fbc647",
         "bank":"f66a56ad-37e6-46f8-a22e-48df7135ce40",
         "quarterpipe": "5906b8bf-6b6f-406b-b318-8a3f33537176",
-        "halfpipe": "980185de-23fb-401c-a7ea-8ae8fe52b152"
+        "halfpipe": "980185de-23fb-401c-a7ea-8ae8fe52b152",
+        "cliff": "47cb71d9-42a7-4047-a461-bfb34e8de98b"
     },
     "provider": {
         "google":"6b4f24b5-5299-46da-bd87-db7f427fbbfd"

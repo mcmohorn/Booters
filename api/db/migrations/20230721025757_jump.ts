@@ -1,7 +1,7 @@
 import { Knex } from "knex";
 import constants from '../constants.json';
 const jumpTableName = 'jump';
-const jumpTypeTableName = 'jump_type';
+export const jumpTypeTableName = 'jump_type';
 
 export async function up(knex: Knex): Promise<void> {
 
@@ -18,7 +18,8 @@ export async function up(knex: Knex): Promise<void> {
 
       await knex(jumpTypeTableName).insert({ 
         id: constants.jumpType.booter, 
-        name: "booter"
+        name: "booter",
+        description: "Jump with takeoff and sloped landing"
       });
 
       await knex(jumpTypeTableName).insert({ 
@@ -29,6 +30,7 @@ export async function up(knex: Knex): Promise<void> {
       await knex(jumpTypeTableName).insert({ 
         id: constants.jumpType.bank, 
         name: "bank"
+
       });
 
       await knex(jumpTypeTableName).insert({ 
@@ -39,6 +41,12 @@ export async function up(knex: Knex): Promise<void> {
       await knex(jumpTypeTableName).insert({ 
         id: constants.jumpType.halfpipe, 
         name: "halfpipe" 
+      });
+
+      await knex(jumpTypeTableName).insert({ 
+        id: constants.jumpType.cliff, 
+        name: "cliff",
+        description: "Immediate drop off"
       });
 
       // create jump table
