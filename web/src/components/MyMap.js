@@ -3,14 +3,18 @@ import { Map, Marker, Overlay } from "pigeon-maps";
 import useWindowDimensions from "../hooks/window";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../redux/userSlice";
+import { setAreas } from "../redux/areasSlice";
 import { css } from "@emotion/react";
 import SkiAreaLogo from "../static/ski-resort.svg";
 import areas from "../static/areas.json";
+import {showError} from "../utils/notifier";
+
 import {
   NearMe,
   Lens,
   Mail,
   Menu,
+  Person,
   RadioButtonChecked,
   Terrain,
 } from "@mui/icons-material";
@@ -25,6 +29,7 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
+  getAlertUtilityClass,
 } from "@mui/material";
 import AreasPopup from "./AreasPopup";
 import { GoogleLogin } from "@react-oauth/google";
@@ -33,6 +38,8 @@ import { useTheme } from "@mui/material/styles";
 import { UserAPI } from "../apis/userApi";
 import { JumpApi } from "../apis/jumpApi";
 import AreasMenu from "./AreasMenu";
+import { AreaApi } from "../apis/areaApi";
+
 
 export function MyMap() {
   const dispatch = useDispatch();
@@ -62,6 +69,7 @@ export function MyMap() {
   };
 
   useEffect(() => {
+    console.log('HERE WE ARE ');
     if (centerMe) {
       setCenter(myLocation);
       console.log("should set center");
@@ -70,8 +78,20 @@ export function MyMap() {
   }, [myLocation]);
 
   const getJumps = () => {
-    JumpApi.list();
-    console.log("user is ", user);
+    // JumpApi.list();
+    // console.log("user is ", user);
+  };
+
+  const getAreas = async () => {
+    try {
+      const r = await AreaApi.list();
+      // console.log('got areas', r);
+      dispatch(setAreas(r));
+    } catch (error) {
+      showError("Failed to get areas");
+      console.log('error fetching areas: ', error);
+    }
+    
   };
 
   const getPosition = () => {
@@ -82,10 +102,14 @@ export function MyMap() {
     }
   };
 
+  
+
   // get user's location and show that by default
   useEffect(() => {
+    console.log('I should fire once');
     getPosition();
     getJumps();
+    getAreas();
   }, []);
 
   const positionButtonStyle = {
@@ -118,7 +142,7 @@ export function MyMap() {
 
   const menuButtonStyle = {
     position: "absolute",
-    left: "1rem",
+    right: "1rem",
     top: "1.5rem",
     borderRadius: "4px",
     color: "white",
@@ -140,7 +164,7 @@ export function MyMap() {
         setIsMenuOpen(true);
       }}
     >
-      <Menu />
+      <Person />
     </IconButton>
   );
 
@@ -198,7 +222,7 @@ export function MyMap() {
 
   const menu = (
     <Drawer
-      anchor="left"
+      anchor="right"
       open={isMenuOpen}
       onClose={() => setIsMenuOpen(false)}
     >

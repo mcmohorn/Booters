@@ -2,6 +2,7 @@ import express, { Application, Router } from "express";
 import bodyParser from "body-parser";
 import userRouter from "./routers/users";
 import jumpRouter from "./routers/jumps";
+import areaRouter from "./routers/areas";
 import session from "express-session";
 import auth from "./middleware/auth";
 import knex from "knex";
@@ -70,6 +71,7 @@ class Server {
 
     // public routes
     this.app.use("/jumps", jumpRouter);
+    this.app.use("/areas", areaRouter);
   }
 
   public start = (port: number) => {

@@ -5,7 +5,6 @@ class JumpsController {
         try {
             // TODO attach query parameters
             const js = await Jumps.list();
-            console.log('js is ', js);
             
             res.send(js);
         } catch (error) {

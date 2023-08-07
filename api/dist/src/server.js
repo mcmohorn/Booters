@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const users_1 = __importDefault(require("./routers/users"));
 const jumps_1 = __importDefault(require("./routers/jumps"));
+const areas_1 = __importDefault(require("./routers/areas"));
 const express_session_1 = __importDefault(require("express-session"));
 const auth_1 = __importDefault(require("./middleware/auth"));
 const knex_1 = __importDefault(require("knex"));
@@ -62,6 +63,7 @@ class Server {
         this.app.use("/user", auth_1.default, users_1.default);
         // public routes
         this.app.use("/jumps", jumps_1.default);
+        this.app.use("/areas", areas_1.default);
     }
 }
 exports.default = Server;

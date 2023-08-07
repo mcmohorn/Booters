@@ -1,6 +1,4 @@
-import { randomUUID } from "crypto";
 import Jump from "../db/models/jump";
-import { Transaction } from "objection";
 
 export type JumpResource = {
     id: string;
@@ -26,7 +24,6 @@ export default class Jumps {
     } 
 
     public static toResouce(graph: any) {
-        console.log('JUMP GRAPH IS ', graph);
         return {
             id: graph.id,
             name: graph.name,
