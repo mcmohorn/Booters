@@ -3,6 +3,7 @@ import Area from "../db/models/area";
 export type AreaResource = {
     id: string;
     name: string;
+    location: any; // this is an {x, y} object
   };
 
 export default class Areas {
@@ -24,6 +25,7 @@ export default class Areas {
         return {
             id: graph.id,
             name: graph.name,
+            location: graph.location
         }
     }
     

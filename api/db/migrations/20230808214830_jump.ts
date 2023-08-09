@@ -1,5 +1,6 @@
 import { Knex } from "knex";
 import constants from '../constants.json';
+import { areaTableName } from "./20230807023109_areas";
 const jumpTableName = 'jump';
 export const jumpTypeTableName = 'jump_type';
 
@@ -57,6 +58,7 @@ export async function up(knex: Knex): Promise<void> {
         table.point('location').notNullable();
 
         table.uuid('jump_type_id').references('id').inTable(jumpTypeTableName).notNullable();
+        table.uuid('area_id').references('id').inTable(areaTableName);
         
         table.timestamp('created').notNullable().defaultTo(knex.fn.now());
         table.timestamp('updated').notNullable().defaultTo(knex.fn.now());
@@ -67,10 +69,21 @@ export async function up(knex: Knex): Promise<void> {
         name: "The Wave",
         location: "(40.555492, -111.649697)",
         jump_type_id: constants.jumpType.booter,
-        description: "Massive booter with small to large takeoff options.  A local favorite."
+        area_id: constants.area.snowbird,
+        description: "Long berm with small to large launch points."
+      };
+
+      const jupiterOreBinJump = {
+        id: "8f22d892-d067-492b-b1a2-91ad27bfb145",
+        name: "Ore Bin",
+        location: "(40.613310, -111.546364)",
+        jump_type_id: constants.jumpType.booter,
+        area_id: constants.area.parkcity,
+        description: "Small kicker near the Jupiter Ore Bin"
       };
 
       await knex.insert(theWaveJump).into(jumpTableName);
+      await knex.insert(jupiterOreBinJump).into(jumpTableName);
 }
 
 export async function down(knex: Knex): Promise<void> 

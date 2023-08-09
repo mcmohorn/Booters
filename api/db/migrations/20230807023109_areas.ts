@@ -1,5 +1,6 @@
 import { Knex } from "knex";
 export const areaTableName = "area";
+import constants from '../constants.json';
 
 export async function up(knex: Knex): Promise<void> {
   // create jump table
@@ -14,31 +15,31 @@ export async function up(knex: Knex): Promise<void> {
   });
 
   const alta = {
-    id: "07e99af7-1131-44d0-a04b-09944c28d1e3",
+    id: constants.area.alta,
     name: "Alta",
     location: "(40.577804, -111.630006)",
   };
 
   const brighton = {
-    id: "e670c65f-5bb9-4276-9eb1-e86dae6bc9c7",
+    id: constants.area.brighton,
     name: "Brighton",
     location: "(40.592535, -111.578137)",
   };
 
   const parkcity = {
-    id: "30d44764-6b41-4940-b1c7-f2b349bd7252",
+    id: constants.area.parkcity,
     name: "Park City",
     location: "(40.636879, -111.521449)",
   };
 
   const deervalley = {
-    id: "12240a6b-bb2e-478a-b456-45e8924ecf0f",
+    id: constants.area.deervalley,
     name: "Deer Valley",
     location: "(40.620271, -111.488767)",
   };
 
   const snowbird = {
-    id: "eabdd7f0-44b2-4f65-8a7c-4ff5b203a0fc",
+    id: constants.area.snowbird,
     name: "Snowbird",
     location: "(40.567291, -111.653515)",
   };

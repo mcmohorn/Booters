@@ -6,11 +6,13 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Landscape from "@mui/icons-material/Landscape";
 import { useTheme } from "@mui/material/styles";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentArea } from "../redux/areasSlice";
 
 const ITEM_HEIGHT = 48;
 
 export default function AreasMenu() {
+  const dispatch = useDispatch();
   const [menuHover, setMenuHover] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const theme = useTheme();
@@ -23,7 +25,11 @@ export default function AreasMenu() {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = (e) => {
-    console.log("SELECTED ITEM", e);
+    const currArea = areas.list.find((a) => a.id == e);
+    if (currArea) {
+      dispatch(setCurrentArea(currArea));
+    }
+
     setAnchorEl(null);
   };
 

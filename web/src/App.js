@@ -14,7 +14,7 @@ function App() {
         <ToastContainer />
       </header>
     </div>
-  );
+  )
 }
 
 

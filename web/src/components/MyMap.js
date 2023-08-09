@@ -3,35 +3,22 @@ import { Map, Marker, Overlay } from "pigeon-maps";
 import useWindowDimensions from "../hooks/window";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../redux/userSlice";
+import { setJumps } from "../redux/jumpsSlice";
 import { setAreas } from "../redux/areasSlice";
-import { css } from "@emotion/react";
 import SkiAreaLogo from "../static/ski-resort.svg";
 import areas from "../static/areas.json";
-import {showError} from "../utils/notifier";
+import { showError } from "../utils/notifier";
 
+import { NearMe, Person, RadioButtonChecked, Place } from "@mui/icons-material";
 import {
-  NearMe,
-  Lens,
-  Mail,
-  Menu,
-  Person,
-  RadioButtonChecked,
-  Terrain,
-} from "@mui/icons-material";
-import {
-  Button,
   IconButton,
+  Icon,
   Drawer,
   Box,
   List,
   ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   Divider,
-  getAlertUtilityClass,
 } from "@mui/material";
-import AreasPopup from "./AreasPopup";
 import { GoogleLogin } from "@react-oauth/google";
 import { useTheme } from "@mui/material/styles";
 
@@ -44,11 +31,13 @@ import { AreaApi } from "../apis/areaApi";
 export function MyMap() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
+  const currentArea = useSelector((state) => state.areas.current);
+  const jumps = useSelector((state) => state.jumps.list);
   const [center, setCenter] = useState(areas[0].location);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [positionHover, setPositionHover] = useState(false);
   const [menuHover, setMenuHover] = useState(false);
-  const [isAreasDialogOpen, setIsAreasDialogOpen] = useState(false);
+  const [focusedJump, setFocusedJump] = useState(null);
   const theme = useTheme();
   const [zoom, setZoom] = useState(11);
   const [geoActive, setGeoActive] = useState(false);
@@ -68,30 +57,45 @@ export function MyMap() {
     alert("Unable to retrieve your location");
   };
 
+  // center map on user's location when indicated
+  // effect fires when location access granted, then my location is pressed
   useEffect(() => {
-    console.log('HERE WE ARE ');
     if (centerMe) {
+      // when button is pressed
       setCenter(myLocation);
-      console.log("should set center");
       setCenterMe(false);
     }
   }, [myLocation]);
 
-  const getJumps = () => {
-    // JumpApi.list();
+  // jump to selected area's center
+  useEffect(() => {
+    if (currentArea.location) {
+      const loc = [currentArea.location.x, currentArea.location.y];
+      setCenter(loc);
+      console.log("we should jump to a new area", currentArea.location);
+    }
+  }, [currentArea]);
+
+  const getJumps = async () => {
+    try {
+      const r = await JumpApi.list();
+
+      dispatch(setJumps(r));
+    } catch (error) {
+      showError("Failed to get jumps");
+      console.log("error fetching jumps: ", error);
+    }
     // console.log("user is ", user);
   };
 
   const getAreas = async () => {
     try {
       const r = await AreaApi.list();
-      // console.log('got areas', r);
       dispatch(setAreas(r));
     } catch (error) {
       showError("Failed to get areas");
-      console.log('error fetching areas: ', error);
+      console.log("error fetching areas: ", error);
     }
-    
   };
 
   const getPosition = () => {
@@ -102,11 +106,8 @@ export function MyMap() {
     }
   };
 
-  
-
-  // get user's location and show that by default
   useEffect(() => {
-    console.log('I should fire once');
+    // get user's location if allowed
     getPosition();
     getJumps();
     getAreas();
@@ -174,12 +175,6 @@ export function MyMap() {
     </Overlay>
   );
 
-  const clickedAreas = (e) => {
-    console.log("here we are", e);
-    e.preventDefault();
-    setIsAreasDialogOpen(true);
-  };
-
   const getLoggedInUser = async () => {
     const u = await UserAPI.get();
     console.log("got user from api ", u);
@@ -205,16 +200,6 @@ export function MyMap() {
 
   const list = (
     <Box role="presentation" onClick={() => setIsMenuOpen(false)}>
-      <List>
-        <ListItem key={"newjump"} disablePadding>
-          <ListItemButton onClick={clickedAreas}>
-            <ListItemIcon>
-              <Terrain />
-            </ListItemIcon>
-            <ListItemText primary={"Areas"} />
-          </ListItemButton>
-        </ListItem>
-      </List>
       <Divider />
       {notSignedInList}
     </Box>
@@ -230,21 +215,24 @@ export function MyMap() {
     </Drawer>
   );
 
-  const areasMenu = (
-    <AreasMenu />
-  );
+  const areasMenu = <AreasMenu />;
 
-  const areaModalClosed = (newLoc) => {
-    setIsAreasDialogOpen(false);
+  
 
-    if (newLoc) {
-      setCenter(newLoc);
-    }
-  };
-
-  const areasPopup = (
-    <AreasPopup open={isAreasDialogOpen} onClose={areaModalClosed} />
-  );
+  const jumpPins = (
+    jumps.map((j) => {
+      return (
+        <Overlay 
+          onMouseEnter={() => {console.log('focused');setFocusedJump(j.id) }}
+          onMouseLeave={() => setFocusedJump(null)}
+          anchor={[j.location.x, j.location.y]} offset={[0, 0]} style={{
+            scale: j.id == focusedJump ? 2 : 1
+          }}>
+          <Place fontSize={j.id == focusedJump ? "large" : "small"} color="primary" />
+        </Overlay>
+      )
+    })
+  )
 
   return (
     <>
@@ -258,16 +246,14 @@ export function MyMap() {
           setZoom(zoom);
         }}
       >
-        <Marker width={50} anchor={[50.879, 4.6997]} />
         {myLocation ? myLocationOverlay : null}
+        {jumpPins}
       </Map>
 
       {geoActive ? myPositionButton : null}
       {menu}
       {menuButton}
-      {areasPopup}
       {areasMenu}
-      
     </>
-  );
+  )
 }
