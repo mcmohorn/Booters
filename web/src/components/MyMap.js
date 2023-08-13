@@ -8,12 +8,26 @@ import { setAreas } from "../redux/areasSlice";
 import SkiAreaLogo from "../static/ski-resort.svg";
 import areas from "../static/areas.json";
 import { showError } from "../utils/notifier";
+import { ClickAwayListener } from "@mui/base";
 
-import { NearMe, Person, RadioButtonChecked, Place } from "@mui/icons-material";
+import {
+  NearMe,
+  Person,
+  RadioButtonChecked,
+  Place,
+  Flag,
+} from "@mui/icons-material";
 import {
   IconButton,
-  Icon,
+  Card,
+  Button,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Typography,
   Drawer,
+  Paper,
+  Rating,
   Box,
   List,
   ListItem,
@@ -22,11 +36,12 @@ import {
 import { GoogleLogin } from "@react-oauth/google";
 import { useTheme } from "@mui/material/styles";
 
+import { EasyChip, MediumChip, HardChip } from "./DifficultyChips";
+
 import { UserAPI } from "../apis/userApi";
 import { JumpApi } from "../apis/jumpApi";
 import AreasMenu from "./AreasMenu";
 import { AreaApi } from "../apis/areaApi";
-
 
 export function MyMap() {
   const dispatch = useDispatch();
@@ -38,6 +53,7 @@ export function MyMap() {
   const [positionHover, setPositionHover] = useState(false);
   const [menuHover, setMenuHover] = useState(false);
   const [focusedJump, setFocusedJump] = useState(null);
+  const [hoveredJump, setHoveredJump] = useState(null);
   const theme = useTheme();
   const [zoom, setZoom] = useState(11);
   const [geoActive, setGeoActive] = useState(false);
@@ -177,7 +193,6 @@ export function MyMap() {
 
   const getLoggedInUser = async () => {
     const u = await UserAPI.get();
-    console.log("got user from api ", u);
     dispatch(setUser(u));
   };
 
@@ -217,22 +232,77 @@ export function MyMap() {
 
   const areasMenu = <AreasMenu />;
 
-  
+  const jumpPins = jumps.map((j) => {
+    return (
+      <Overlay
+        key={j.id}
+        onClick={() => {
+          setCenter([j.location.x, j.location.y]);
+          setFocusedJump(j);
+        }}
+        anchor={[j.location.x, j.location.y]}
+        offset={[0, 0]}
+      >
+        <Flag
+          color={hoveredJump == j.id ? "primary" : "secondary"}
+          onMouseEnter={() => setHoveredJump(j.id)}
+          onMouseLeave={() => setHoveredJump(null)}
+          onClick={() => {
+            setCenter([j.location.x, j.location.y]);
+            setFocusedJump(j);
+          }}
+        />
+      </Overlay>
+    );
+  });
 
-  const jumpPins = (
-    jumps.map((j) => {
-      return (
-        <Overlay 
-          onMouseEnter={() => {console.log('focused');setFocusedJump(j.id) }}
-          onMouseLeave={() => setFocusedJump(null)}
-          anchor={[j.location.x, j.location.y]} offset={[0, 0]} style={{
-            scale: j.id == focusedJump ? 2 : 1
-          }}>
-          <Place fontSize={j.id == focusedJump ? "large" : "small"} color="primary" />
-        </Overlay>
-      )
-    })
-  )
+  const focusedJumpOverlay = focusedJump ? (
+    <Overlay
+      anchor={[focusedJump.location.x, focusedJump.location.y]}
+      offset={[0, 0]}
+    >
+      <ClickAwayListener onClickAway={() => setFocusedJump(null)}>
+        <Card sx={{ maxWidth: width / 2 }}>
+          <CardMedia
+            sx={{ height: 140 }}
+            image="/images/ski-default.jpg"
+            title="green iguana"
+          />
+          <CardContent>
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="div"
+              style={{ textAlign: "left" }}
+            >
+              {focusedJump.name}
+              <HardChip />
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {focusedJump.description}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <IconButton aria-label="report a problem">
+              <Flag />
+            </IconButton>
+            <Button size="small">Learn More</Button>
+          </CardActions>
+        </Card>
+      </ClickAwayListener>
+    </Overlay>
+  ) : null;
+
+  const focusedJumpOverlay0 = focusedJump ? (
+    <Overlay
+      anchor={[focusedJump.location.x, focusedJump.location.y]}
+      offset={[0, 0]}
+    >
+      <Paper>
+        <Typography>abc</Typography>
+      </Paper>
+    </Overlay>
+  ) : null;
 
   return (
     <>
@@ -252,8 +322,9 @@ export function MyMap() {
 
       {geoActive ? myPositionButton : null}
       {menu}
+      {focusedJumpOverlay}
       {menuButton}
       {areasMenu}
     </>
-  )
+  );
 }
