@@ -6,6 +6,11 @@
         "deervalley": "12240a6b-bb2e-478a-b456-45e8924ecf0f",
         "snowbird": "eabdd7f0-44b2-4f65-8a7c-4ff5b203a0fc"
     },
+    "difficulty": {
+        "easy": "135c8d94-c8b2-4036-9ee7-806805cbb061",
+        "medium": "23182fba-334a-4827-8677-d971b8cfc9bf",
+        "hard": "3b8e4045-673a-4b56-9c63-8dbfbb60a53a"
+    },
     "jumpType" : {
         "booter": "32c983cc-9b07-4d06-b63a-2b8647465163",
         "knuckle": "156d14f0-4187-46c2-9f47-c0c992fbc647",
