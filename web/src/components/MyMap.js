@@ -6,7 +6,6 @@ import { setUser } from "../redux/userSlice";
 import { setJumps } from "../redux/jumpsSlice";
 import { setAreas } from "../redux/areasSlice";
 import SkiAreaLogo from "../static/ski-resort.svg";
-import areas from "../static/areas.json";
 import { showError, showSuccess } from "../utils/notifier";
 import { ClickAwayListener } from "@mui/base";
 
@@ -36,7 +35,12 @@ import {
 import { GoogleLogin } from "@react-oauth/google";
 import { useTheme } from "@mui/material/styles";
 
-import { EasyChip, MediumChip, HardChip } from "./DifficultyChips";
+import {
+  EasyChip,
+  MediumChip,
+  HardChip,
+  getChipForDifficulty,
+} from "./DifficultyChips";
 
 import { UserAPI } from "../apis/userApi";
 import { JumpApi } from "../apis/jumpApi";
@@ -48,7 +52,7 @@ export function MyMap() {
   const user = useSelector((state) => state.user.value);
   const currentArea = useSelector((state) => state.areas.current);
   const jumps = useSelector((state) => state.jumps.list);
-  const [center, setCenter] = useState(areas[0].location);
+  const [center, setCenter] = useState([40.633094, -111.515027]); // default somewhere near PC
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [positionHover, setPositionHover] = useState(false);
   const [menuHover, setMenuHover] = useState(false);
@@ -193,7 +197,7 @@ export function MyMap() {
 
   const getLoggedInUser = async () => {
     const u = await UserAPI.get();
-    console.log('u is ', u);
+    console.log("u is ", u);
     showSuccess(`Logged in as ${u.name} (${u.provider})`);
     dispatch(setUser(u));
   };
@@ -205,8 +209,8 @@ export function MyMap() {
           onSuccess={(credentialResponse) => {
             localStorage.setItem("token", credentialResponse.credential);
             getLoggedInUser();
-            console.log('cred response is ', credentialResponse);
-            
+            console.log("cred response is ", credentialResponse);
+
             setIsMenuOpen(false);
           }}
           onError={() => {
@@ -261,37 +265,51 @@ export function MyMap() {
     );
   });
 
+  // returns the correct difficulty chip
+  const focusedJumpDifficultyChip = focusedJump
+    ? getChipForDifficulty(focusedJump.difficultyId)
+    : null;
+
   const focusedJumpOverlay = focusedJump ? (
     <Overlay
       anchor={[focusedJump.latitude, focusedJump.longitude]}
       offset={[0, 0]}
     >
       <ClickAwayListener onClickAway={() => setFocusedJump(null)}>
-        <Card sx={{ maxWidth: width / 2 }}>
+        <Card sx={{ maxWidth: width / 2, minWidth: width/2 }}>
           <CardMedia
             sx={{ height: 140 }}
             image="/images/ski-default.jpg"
             title="green iguana"
           />
           <CardContent>
-          <Typography
-              gutterBottom
-              component="div"
-              style={{ textAlign: "right" }}
-            >
-              <HardChip />
-            </Typography>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="div"
-              style={{ textAlign: "left" }}
-            >
-              {focusedJump.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {focusedJump.description}
-            </Typography>
+            <div style={{ backgroundColor: "black" }}>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="span"
+                style={{
+                  textAlign: "left",
+                  backgroundColor: "green",
+                  float: "left",
+                }}
+              >
+                {focusedJump.name}
+              </Typography>
+              <Typography
+                gutterBottom
+                component="span"
+                style={{ textAlign: "right", float: "right" }}
+              >
+                {focusedJumpDifficultyChip}
+              </Typography>
+            </div>
+            <br/>
+            <div>
+              <Typography variant="body2" color="text.secondary" style={{backgroundColor: "red", textAlign: "left", bottom: "0px"}}>
+                {focusedJump.description}
+              </Typography>
+            </div>
           </CardContent>
           <CardActions>
             <IconButton aria-label="report a problem">
@@ -303,7 +321,6 @@ export function MyMap() {
       </ClickAwayListener>
     </Overlay>
   ) : null;
-
 
   return (
     <>
