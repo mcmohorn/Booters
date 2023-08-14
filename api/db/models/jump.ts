@@ -9,13 +9,12 @@ export default class Jump extends Model {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['name', 'location', 'jumpTypeId'],
+      required: ['name', 'jumpTypeId'],
 
       properties: {
         id: { type: 'string' },
         jumpTypeId: { type: 'string', minLength: 36, maxLength: 36 },
         name: { type: 'string', minLength: 1, maxLength: 255 },
-        location: { type: 'array', minLength: 2, maxLength: 2 },
       }
     };
   }

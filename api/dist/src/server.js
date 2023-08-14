@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const users_1 = __importDefault(require("./routers/users"));
 const jumps_1 = __importDefault(require("./routers/jumps"));
+const jumpSecure_1 = __importDefault(require("./routers/jumpSecure"));
 const areas_1 = __importDefault(require("./routers/areas"));
 const express_session_1 = __importDefault(require("express-session"));
 const auth_1 = __importDefault(require("./middleware/auth"));
@@ -57,10 +58,11 @@ class Server {
     routerConfig() {
         // enable cors for preflight requests
         this.app.options("*", (0, cors_1.default)({
-            origin: process.env.BOOTERS_WEB_URL
+            origin: process.env.BOOTERS_WEB_URL,
         }));
         // private routes
         this.app.use("/user", auth_1.default, users_1.default);
+        this.app.use("/jump", auth_1.default, jumpSecure_1.default);
         // public routes
         this.app.use("/jumps", jumps_1.default);
         this.app.use("/areas", areas_1.default);

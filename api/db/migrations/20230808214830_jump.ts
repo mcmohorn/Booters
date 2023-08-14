@@ -93,7 +93,8 @@ export async function up(knex: Knex): Promise<void> {
         table.uuid('id').primary();
         table.string('name', 30).notNullable();
         table.string('description', 300);
-        table.point('location').notNullable();
+        table.float('latitude').notNullable();
+        table.float('longitude').notNullable();
 
         table.uuid('jump_type_id').references('id').inTable(jumpTypeTableName).notNullable();
         table.uuid('area_id').references('id').inTable(areaTableName);
@@ -106,7 +107,8 @@ export async function up(knex: Knex): Promise<void> {
       const theWaveJump = {
         id: "a1f2ed0d-7831-4c69-ba1d-ae407fe8e108",
         name: "The Wave",
-        location: "(40.555492, -111.649697)",
+        latitude: 40.555492,
+        longitude: -111.649697,
         difficulty_id: constants.difficulty.easy,
         jump_type_id: constants.jumpType.booter,
         area_id: constants.area.snowbird,
@@ -116,7 +118,8 @@ export async function up(knex: Knex): Promise<void> {
       const jupiterOreBinJump = {
         id: "8f22d892-d067-492b-b1a2-91ad27bfb145",
         name: "Ore Bin",
-        location: "(40.613310, -111.546364)",
+        latitude: 40.613310,
+        longitude: -111.546364,
         jump_type_id: constants.jumpType.booter,
         difficulty_id: constants.difficulty.hard,
         area_id: constants.area.parkcity,

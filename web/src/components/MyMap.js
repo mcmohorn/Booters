@@ -237,10 +237,10 @@ export function MyMap() {
       <Overlay
         key={j.id}
         onClick={() => {
-          setCenter([j.location.x, j.location.y]);
+          setCenter([j.latitude, j.longitude]);
           setFocusedJump(j);
         }}
-        anchor={[j.location.x, j.location.y]}
+        anchor={[j.latitude, j.longitude]}
         offset={[0, 0]}
       >
         <Flag
@@ -248,7 +248,7 @@ export function MyMap() {
           onMouseEnter={() => setHoveredJump(j.id)}
           onMouseLeave={() => setHoveredJump(null)}
           onClick={() => {
-            setCenter([j.location.x, j.location.y]);
+            setCenter([j.latitude, j.longitude]);
             setFocusedJump(j);
           }}
         />
@@ -258,7 +258,7 @@ export function MyMap() {
 
   const focusedJumpOverlay = focusedJump ? (
     <Overlay
-      anchor={[focusedJump.location.x, focusedJump.location.y]}
+      anchor={[focusedJump.latitude, focusedJump.longitude]}
       offset={[0, 0]}
     >
       <ClickAwayListener onClickAway={() => setFocusedJump(null)}>
@@ -293,16 +293,6 @@ export function MyMap() {
     </Overlay>
   ) : null;
 
-  const focusedJumpOverlay0 = focusedJump ? (
-    <Overlay
-      anchor={[focusedJump.location.x, focusedJump.location.y]}
-      offset={[0, 0]}
-    >
-      <Paper>
-        <Typography>abc</Typography>
-      </Paper>
-    </Overlay>
-  ) : null;
 
   return (
     <>

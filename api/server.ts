@@ -2,12 +2,13 @@ import express, { Application, Router } from "express";
 import bodyParser from "body-parser";
 import userRouter from "./routers/users";
 import jumpRouter from "./routers/jumps";
+import jumpSecureRouter from "./routers/jumpSecure";
 import areaRouter from "./routers/areas";
 import session from "express-session";
 import auth from "./middleware/auth";
 import knex from "knex";
 import { Model } from "objection";
-import knexConfig from "./db/knexfile"
+import knexConfig from "./db/knexfile";
 
 import cors from "cors";
 
@@ -45,29 +46,29 @@ class Server {
       next();
     });
 
-    this.app.options
+    this.app.options;
   }
 
   private dbConnect() {
-
     // initialize databse connection via knex
     const knexConnection = knex(knexConfig[process.env.NODE_ENV]);
 
     // attach objection to the knex connection
     Model.knex(knexConnection);
-
   }
 
   private routerConfig() {
-
     // enable cors for preflight requests
-    this.app.options("*", cors({
-        origin: process.env.BOOTERS_WEB_URL
-    })); 
-
+    this.app.options(
+      "*",
+      cors({
+        origin: process.env.BOOTERS_WEB_URL,
+      })
+    );
 
     // private routes
     this.app.use("/user", auth, userRouter);
+    this.app.use("/jump", auth, jumpSecureRouter);
 
     // public routes
     this.app.use("/jumps", jumpRouter);
