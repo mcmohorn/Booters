@@ -8,4 +8,8 @@ const showError = (msg) => {
   toast.error(msg, defaultToastOptions);
 };
 
-export { showError };
+const showSuccess = (msg) => {
+  toast.success(msg, defaultToastOptions);
+};
+
+export { showError, showSuccess };

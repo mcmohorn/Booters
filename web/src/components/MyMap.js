@@ -7,7 +7,7 @@ import { setJumps } from "../redux/jumpsSlice";
 import { setAreas } from "../redux/areasSlice";
 import SkiAreaLogo from "../static/ski-resort.svg";
 import areas from "../static/areas.json";
-import { showError } from "../utils/notifier";
+import { showError, showSuccess } from "../utils/notifier";
 import { ClickAwayListener } from "@mui/base";
 
 import {
@@ -193,6 +193,8 @@ export function MyMap() {
 
   const getLoggedInUser = async () => {
     const u = await UserAPI.get();
+    console.log('u is ', u);
+    showSuccess(`Logged in as ${u.name} (${u.provider})`);
     dispatch(setUser(u));
   };
 
@@ -203,6 +205,9 @@ export function MyMap() {
           onSuccess={(credentialResponse) => {
             localStorage.setItem("token", credentialResponse.credential);
             getLoggedInUser();
+            console.log('cred response is ', credentialResponse);
+            
+            setIsMenuOpen(false);
           }}
           onError={() => {
             alert("Login Failed");
