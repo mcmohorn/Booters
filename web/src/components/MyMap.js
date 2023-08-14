@@ -85,10 +85,10 @@ export function MyMap() {
 
   // jump to selected area's center
   useEffect(() => {
-    if (currentArea.location) {
-      const loc = [currentArea.location.x, currentArea.location.y];
+    if (currentArea.latitude && currentArea.longitude) {
+      const loc = [currentArea.latitude, currentArea.longitude];
       setCenter(loc);
-      console.log("we should jump to a new area", currentArea.location);
+      console.log("we should jump to a new area", currentArea);
     }
   }, [currentArea]);
 
@@ -269,6 +269,13 @@ export function MyMap() {
             title="green iguana"
           />
           <CardContent>
+          <Typography
+              gutterBottom
+              component="div"
+              style={{ textAlign: "right" }}
+            >
+              <HardChip />
+            </Typography>
             <Typography
               gutterBottom
               variant="h5"
@@ -276,7 +283,6 @@ export function MyMap() {
               style={{ textAlign: "left" }}
             >
               {focusedJump.name}
-              <HardChip />
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {focusedJump.description}

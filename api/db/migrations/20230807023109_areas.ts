@@ -8,7 +8,8 @@ export async function up(knex: Knex): Promise<void> {
     table.uuid("id").primary();
     table.string("name", 30).notNullable();
     table.string("logo", 300);
-    table.point("location").notNullable();
+    table.float("latitude").notNullable();
+    table.float("longitude").notNullable();
 
     table.timestamp("created").notNullable().defaultTo(knex.fn.now());
     table.timestamp("updated").notNullable().defaultTo(knex.fn.now());
@@ -17,31 +18,36 @@ export async function up(knex: Knex): Promise<void> {
   const alta = {
     id: constants.area.alta,
     name: "Alta",
-    location: "(40.577804, -111.630006)",
+    latitude: 40.577804,
+    longitude: -111.630006
   };
 
   const brighton = {
     id: constants.area.brighton,
     name: "Brighton",
-    location: "(40.592535, -111.578137)",
+    latitude: 40.592535,
+    longitude: -111.578137
   };
 
   const parkcity = {
     id: constants.area.parkcity,
     name: "Park City",
-    location: "(40.636879, -111.521449)",
+    latitude: 40.636879,
+    longitude: -111.521449
   };
 
   const deervalley = {
     id: constants.area.deervalley,
     name: "Deer Valley",
-    location: "(40.620271, -111.488767)",
+    latitude: 40.620271,
+    longitude: -111.488767
   };
 
   const snowbird = {
     id: constants.area.snowbird,
     name: "Snowbird",
-    location: "(40.567291, -111.653515)",
+    latitude: 40.567291,
+    longitude: -111.653515
   };
 
   await knex.insert(alta).into(areaTableName);
