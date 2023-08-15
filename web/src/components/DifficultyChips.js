@@ -1,6 +1,6 @@
 import { Chip } from "@mui/material";
 import { Circle, Square } from "@mui/icons-material";
-import BlackDiamondLogo from "../static/images/blackdiamond.svg"; // TODO
+import {ReactComponent as BlackDiamondLogo} from "../static/images/diamond.inline.svg";
 import constants from "../static/constants.json";
 
 const EasyChip = () => {
@@ -23,9 +23,9 @@ const MediumChip = () => {
 const HardChip = () => {
   return (
     <Chip
-      icon={<Square />}
+      icon={<BlackDiamondLogo />}
       label="Expert"
-      style={{ color: "black" }}
+      style={{ width: 50, color: "black" }}
     />
   );
 };

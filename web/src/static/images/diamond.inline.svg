@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 47.5 47.5"
+   id="diamond"
+   version="1.1"
+   sodipodiDocname="diamond.svg"
+   inkscapeVersion="1.2 (dc2aeda, 2022-05-15)"
+   xmlnsInkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlnsSodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlnsSvg="http://www.w3.org/2000/svg">
+  <sodipodiNamedview
+     id="namedview56"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscapeShowpageshadow="2"
+     inkscapePageopacity="0.0"
+     inkscapePagecheckerboard="0"
+     inkscapeDeskcolor="#d1d1d1"
+     showgrid="false"
+     inkscapeZoom="4.9684211"
+     inkscapeCx="23.850636"
+     inkscapeCy="23.75"
+     inkscapeWindow-width="1309"
+     inkscapeWindow-height="456"
+     inkscapeWindow-x="0"
+     inkscapeWindow-y="25"
+     inkscapeWindow-maximized="0"
+     inkscapeCurrent-layer="g53" />
+  <defs
+     id="defs49">
+    <clipPath
+       id="a">
+      <path
+         d="M0 38h38V0H0v38Z"
+         id="path46" />
+    </clipPath>
+  </defs>
+  <g
+     clip-path="url(#a)"
+     transform="matrix(1.25 0 0 -1.25 0 47.5)"
+     id="g53">
+    <path
+       fill="#dd2e44"
+       d="M19.437 1.253c-.242-.337-.632-.337-.874 0L6.314 18.388c-.242.338-.242.886 0 1.224l12.249 17.135c.242.338.632.338.874 0l12.25-17.135c.241-.338.241-.886 0-1.224L19.437 1.253Z"
+       id="path51"
+       style="fill:#000000" />
+  </g>
+</svg>

@@ -4,7 +4,6 @@
 - DBeaver (recommended DB interface tool)
 
 
-
 # Backend (/api)
 
 

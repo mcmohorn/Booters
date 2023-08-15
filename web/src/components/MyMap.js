@@ -14,6 +14,7 @@ import {
   Person,
   RadioButtonChecked,
   Place,
+  Add,
   Flag,
 } from "@mui/icons-material";
 import {
@@ -46,6 +47,7 @@ import { UserAPI } from "../apis/userApi";
 import { JumpApi } from "../apis/jumpApi";
 import AreasMenu from "./AreasMenu";
 import { AreaApi } from "../apis/areaApi";
+import CreateJumpDialog from "./CreateJumpModal";
 
 export function MyMap() {
   const dispatch = useDispatch();
@@ -56,6 +58,8 @@ export function MyMap() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [positionHover, setPositionHover] = useState(false);
   const [menuHover, setMenuHover] = useState(false);
+  const [createJumpHover, setCreateJumpHover] = useState(false);
+  const [createJumpOpen, setCreateJumpOpen] = useState(false);
   const [focusedJump, setFocusedJump] = useState(null);
   const [hoveredJump, setHoveredJump] = useState(null);
   const theme = useTheme();
@@ -189,6 +193,34 @@ export function MyMap() {
     </IconButton>
   );
 
+  const createJumpButtonStyle = {
+    position: "absolute",
+    left: "1rem",
+    bottom: "1.5rem",
+    borderRadius: "4px",
+    color: "white",
+    width: "56px",
+    height: "56px",
+    backgroundColor: createJumpHover
+      ? theme.palette.primary.dark
+      : theme.palette.primary.main,
+  };
+
+  const createJumpButton = (
+    <IconButton
+      color="primary"
+      variant="contained"
+      style={createJumpButtonStyle}
+      onMouseEnter={() => setCreateJumpHover(true)}
+      onMouseLeave={() => setCreateJumpHover(false)}
+      onClick={() => {
+        setCreateJumpOpen(true);
+      }}
+    >
+      <Add />
+    </IconButton>
+  );
+
   const myLocationOverlay = (
     <Overlay anchor={myLocation} offset={[0, 0]}>
       <RadioButtonChecked color="primary" />
@@ -283,14 +315,13 @@ export function MyMap() {
             title="green iguana"
           />
           <CardContent>
-            <div style={{ backgroundColor: "black" }}>
+            <div style={{ height: 45 }}>
               <Typography
                 gutterBottom
                 variant="h5"
                 component="span"
                 style={{
                   textAlign: "left",
-                  backgroundColor: "green",
                   float: "left",
                 }}
               >
@@ -304,15 +335,14 @@ export function MyMap() {
                 {focusedJumpDifficultyChip}
               </Typography>
             </div>
-            <br/>
             <div>
-              <Typography variant="body2" color="text.secondary" style={{backgroundColor: "red", textAlign: "left", bottom: "0px"}}>
+              <Typography variant="body2" color="text.secondary" style={{ textAlign: "left", bottom: "0px"}}>
                 {focusedJump.description}
               </Typography>
             </div>
           </CardContent>
           <CardActions>
-            <IconButton aria-label="report a problem">
+            <IconButton aria-label="report a problem" style={{right: 0}}>
               <Flag />
             </IconButton>
             <Button size="small">Learn More</Button>
@@ -321,6 +351,10 @@ export function MyMap() {
       </ClickAwayListener>
     </Overlay>
   ) : null;
+
+  const createJumpDialog = (
+    <CreateJumpDialog open={createJumpOpen} onClose={() => setCreateJumpOpen(false)}/>
+  );
 
   return (
     <>
@@ -342,6 +376,8 @@ export function MyMap() {
       {menu}
       {focusedJumpOverlay}
       {menuButton}
+      {createJumpButton}
+      {createJumpDialog}
       {areasMenu}
     </>
   );
