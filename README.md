@@ -3,6 +3,10 @@
 - Postgres DB - install this database system locally
 - DBeaver (recommended DB interface tool)
 
+# Branches
+- `dev` is for active development
+- `main` is the production branch
+
 
 # Backend (/api)
 
