@@ -2,13 +2,14 @@ import express, { Application, Router } from "express";
 import bodyParser from "body-parser";
 import userRouter from "./routers/users";
 import jumpRouter from "./routers/jumps";
-import jumpSecureRouter from "./routers/jumpSecure";
 import areaRouter from "./routers/areas";
 import session from "express-session";
 import auth from "./middleware/auth";
 import knex from "knex";
 import { Model } from "objection";
 import knexConfig from "./db/knexfile";
+import swaggerUI from 'swagger-ui-express';
+import openApiDocs from './docs/openApiDocumentation';
 
 import cors from "cors";
 
@@ -66,11 +67,11 @@ class Server {
       })
     );
 
-    // private routes
-    this.app.use("/user", auth, userRouter);
-    this.app.use("/jump", auth, jumpSecureRouter);
+    // serve the swagger documentation
+    this.app.use('/docs', swaggerUI.serve, swaggerUI.setup(openApiDocs));
 
-    // public routes
+    
+    this.app.use("/user", userRouter);
     this.app.use("/jumps", jumpRouter);
     this.app.use("/areas", areaRouter);
   }

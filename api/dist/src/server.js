@@ -7,13 +7,13 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const users_1 = __importDefault(require("./routers/users"));
 const jumps_1 = __importDefault(require("./routers/jumps"));
-const jumpSecure_1 = __importDefault(require("./routers/jumpSecure"));
 const areas_1 = __importDefault(require("./routers/areas"));
 const express_session_1 = __importDefault(require("express-session"));
-const auth_1 = __importDefault(require("./middleware/auth"));
 const knex_1 = __importDefault(require("knex"));
 const objection_1 = require("objection");
 const knexfile_1 = __importDefault(require("./db/knexfile"));
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const openApiDocumentation_1 = __importDefault(require("./docs/openApiDocumentation"));
 const cors_1 = __importDefault(require("cors"));
 class Server {
     constructor() {
@@ -60,10 +60,9 @@ class Server {
         this.app.options("*", (0, cors_1.default)({
             origin: process.env.BOOTERS_WEB_URL,
         }));
-        // private routes
-        this.app.use("/user", auth_1.default, users_1.default);
-        this.app.use("/jump", auth_1.default, jumpSecure_1.default);
-        // public routes
+        // serve the swagger documentation
+        this.app.use('/docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(openApiDocumentation_1.default));
+        this.app.use("/user", users_1.default);
         this.app.use("/jumps", jumps_1.default);
         this.app.use("/areas", areas_1.default);
     }
