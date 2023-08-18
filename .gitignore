@@ -3,3 +3,8 @@ web/node_modules/
 /api/node_modules/**/*
 api/dist/**/* 
 .DS_Store
+
+
+infra/service-account-key.json
+infra/.terraform/
+infra/.terraform.lock.hcl

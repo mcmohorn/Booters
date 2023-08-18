@@ -2,6 +2,7 @@
 - NodeJS - the front end and back end are both powered by NodeJS
 - Postgres DB - install this database system locally
 - DBeaver (recommended DB interface tool)
+- Terraform v1.5.5
 
 # Branches
 - `dev` is for active development
@@ -29,3 +30,15 @@ https://github.com/jfollmann/knex-migrations-ts/tree/main
 
 # Frontend (/web)
 `react-scripts` should be installed globally 
+
+
+
+# Infrastructure (/infra)
+
+The infrastructure for this project is deployed on Google Cloud via Terraform.
+
+
+## Environment Variables
+
+
+`TF_VAR_gcp_hopspots_project_id`
