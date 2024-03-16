@@ -1,3 +1,5 @@
+Platform to locate ski jumps written in Typescript and React
+
 # Prerequisites
 - NodeJS - the front end and back end are both powered by NodeJS
 - Postgres DB - install this database system locally
