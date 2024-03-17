@@ -1,4 +1,5 @@
-Platform to locate ski jumps written in Typescript and React
+# Booters
+Booters is a user-driven platform to locate jumps at ski areas written in Typescript, React, Postgres, and Terraform.  This is an example starter project using this stack.  The project has a more permanent version named Hopspots in a private repository.
 
 # Prerequisites
 - NodeJS - the front end and back end are both powered by NodeJS
@@ -14,8 +15,8 @@ Platform to locate ski jumps written in Typescript and React
 # Backend (/api)
 
 
-### Knex Migrations
-This project uses knex to perform database migrations.
+### Database Migrations
+This project uses knex to perform database migrations
 
 To create a new migration file for a new `account` table, use the npm script
 
